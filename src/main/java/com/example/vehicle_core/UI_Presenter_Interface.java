@@ -1,8 +1,9 @@
 package com.example.vehicle_core;
 
-public interface UI_Interface {
+import org.json.JSONObject;
 
-    public void CreateNewVehicleDTO( DTO dto);
-    public void Start();
-    //public void selectOneVehicleAllDataDTOByRegNumber();
+public interface UI_Presenter_Interface {
+    public void DisplayOneVehicle( JSONObject getVehicleResponseModelJSON);
+
+    public void DisplaySaveStatus( JSONObject newVehicleResponseModelJSON);
 }
