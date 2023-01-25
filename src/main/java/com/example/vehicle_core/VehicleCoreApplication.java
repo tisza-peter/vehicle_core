@@ -8,12 +8,12 @@ import java.util.List;
 
 public class VehicleCoreApplication implements Interactor_Interface {
 
-    private Store_Repository_Interface myStore = null;
+    private VehicleStorage myStore = null;
     private UI_Presenter_Interface myUI = null;
     public VehicleCoreApplication() {
     }
 
-    public void SetStore(Store_Repository_Interface store)
+    public void SetStore(VehicleStorage store)
     {
         myStore = store;
     }
@@ -24,17 +24,21 @@ public class VehicleCoreApplication implements Interactor_Interface {
     }
 
     @Override
-    public void save(JSONObject vehicleJSON) {
+    public void save(String vehicleJSON) {
         NewVehicleRequestModel RequestModel= new NewVehicleRequestModel();
-        RequestModel.setByJson(vehicleJSON);
+
+        try {
+            RequestModel.setByJson(new JSONObject(vehicleJSON));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
         VehicleDAO vehicleDAO= new VehicleDAO();
         vehicleDAO.setVehicle(RequestModel.getVehicle());
         vehicleDAO.setOwners(RequestModel.getOwners());
         NewVehicleResponseModel responseModel= new NewVehicleResponseModel();
-
-        String status =myStore.SaveBusinessObject(vehicleDAO);
+        String status =myStore.SaveVehicle(vehicleDAO);
         responseModel.setStatus(status);
-        myUI.DisplaySaveStatus(responseModel.getJson());
+        myUI.DisplaySaveStatus(responseModel.getJson().toString());
         // validate
         // parse
         // dtoJSON to entity
@@ -42,9 +46,14 @@ public class VehicleCoreApplication implements Interactor_Interface {
     }
 
     @Override
-    public void get(JSONObject vehicleRegistrationNumberJSON){
-        String vehicleRegistrationNumber= parseGetVehicleRequestModel(vehicleRegistrationNumberJSON);
-        VehicleDAO storedVehicle = myStore.LoadBusinessObject(vehicleRegistrationNumber);
+    public void get(String vehicleRegistrationNumberJSON){
+        String vehicleRegistrationNumber= null;
+        try {
+            vehicleRegistrationNumber = parseGetVehicleRequestModel(new JSONObject(vehicleRegistrationNumberJSON));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        VehicleDAO storedVehicle = myStore.LoadVehicle(vehicleRegistrationNumber);
         GetVehicleResponseModel model = new GetVehicleResponseModel();
         VehicleEntity vehicleEntity = storedVehicle.getVehicle();
         List<OwnerEntity> owners = new ArrayList<>();
@@ -53,7 +62,7 @@ public class VehicleCoreApplication implements Interactor_Interface {
         }
         model.setVehicle(vehicleEntity);
         model.setOwners(owners);
-        myUI.DisplayOneVehicle(model.getJson());
+        myUI.DisplayOneVehicle(model.getJson().toString());
         // validate
         // parse
         // repository.load

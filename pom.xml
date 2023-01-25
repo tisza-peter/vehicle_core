@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>vehicle_core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2</version>
     <name>vehicle_core</name>
     <description>vehicle_core</description>
     <properties>
@@ -26,7 +26,6 @@
             <version>0.0.20131108.vaadin1</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

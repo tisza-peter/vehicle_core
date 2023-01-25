@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface Interactor_Interface {
-    void save(JSONObject vehicle);
-    void get(JSONObject vehicleRegistrationNumber);
+    void save(String vehicleJSON);
+    void get(String vehicleRegistrationNumberJSON);
 
 }
